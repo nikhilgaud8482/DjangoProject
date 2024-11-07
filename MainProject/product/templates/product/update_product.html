@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+{% block title %}
+crete product
+{% endblock title %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+   <label for ="name">Name</label>
+   <input type="text" name="name" id="" value="{{product.name}}"><br>
+   <label for ="price">Price</label>
+   <input tyoe="number" name="price" min="1" id=""    value="{{product.price_inclusive}}" step="0.1"><br>
+   <label for ="description">Description</label>
+   <textarea name="description" id=""   rows="10"cols="20">  {{product.description}}</textarea><br>
+   <label for="brand">Brand</label>
+   <select name="brand" id="">
+      {% for brand in brands %}
+      {% if brand.name == product.brand.name %}
+   <option value="{{brand.name}}" selected="selected">{{brand.name}}</option>
+
+   {%  endif %}
+   <option value="{{brand.name}}">{{brand.name}}</option>
+   {% endfor %}
+  
+   </select>
+   <input type="submit" value="Update ">
+</form>
+
+ 
+
+{% endblock content %}
