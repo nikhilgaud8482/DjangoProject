@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.views import  View
 from .models import Product,ProductImages
 # Create your views here.
-from .models import Brand
+from .models import Brand,Category
 def brandlist(request):
     data=Brand.objects.all()
     context={
@@ -33,10 +33,12 @@ class Addproduct(View):
     
 def  productlist(request):
     data=Product.objects.all()
+    categories = Category.objects.all()
     context={
-        'products':data
+        'products':data,
+        'categories':categories,
     }
-    return render(request,'product/product_list.html',context)
+    return render(request,'product/shop.html',context)
 
 def product_details(request,id):
     product= get_object_or_404(Product,id=id)
