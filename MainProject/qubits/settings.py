@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     #'Accounts.apps.AccountsConfig',
     'accounts',
     'django_extensions',
+    'order',
+    'cart',
 
 ]
 

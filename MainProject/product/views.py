@@ -2,6 +2,22 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.views import  View
 from .models import Product,ProductImages
 # Create your views here.
+
+from django.contrib.auth.models import User
+from cart.models import *
+
+def cart_items(request):
+    u = get_object_or_404( User,username=request.user)
+    product = Cart.objects.filter(user=u)
+    data=[]
+    for x in product:
+        y=dict()
+        y['image']=ProductImages.objects.filter(product=x.id).first()
+        y['product']=x
+        data.append(y)
+    return data
+
+    
 from .models import Brand,Category
 def brandlist(request):
     data=Brand.objects.all()
@@ -30,13 +46,34 @@ class Addproduct(View):
             features=' '
         )
         return redirect('/')
-    
+def fetch_image_in_dictionary(image_obj,product_obj):
+    result= dict()
+    for image in image_obj:
+        if (len(result)==2):
+            break
+        if image.product.id == product_obj.id:
+                result[chr(65+len(result))]=image
+    return result
 def  productlist(request):
-    data=Product.objects.all()
+    product_objects =Product.objects.all()
+    images = ProductImages.objects.all()
+    Products=[]
+    for product_obj in product_objects:
+        images = ProductImages.objects.all()
+        Products=[]
+        for product_obj in product_objects:
+            image = fetch_image_in_dictionary(images,product_obj)
+            Products.append({
+                'details':product_obj,
+                'images':image
+
+            })
+        
     categories = Category.objects.all()
     context={
-        'products':data,
+        'products':Products,
         'categories':categories,
+        'product':cart_items(request),
     }
     return render(request,'product/shop.html',context)
 
@@ -89,3 +126,7 @@ def add_product_with_django_form(request):
         'form':product_form
     }
     return render(request,'product/add_entity.html',context)
+
+
+
+    

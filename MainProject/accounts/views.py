@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 from django.views import View
 from django.contrib import messages
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 def register(request):
     if request.method == 'GET':
         print(' GET method')
@@ -45,7 +45,7 @@ class Register(View):
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
             if password==confirm_password:
-                user.password = password
+                User.set_password(user,password)
             else:
                 messages.error(request,'Password and Confirm password are not same')
                 messages.info(request,'make sure password and confirm password should be same')
@@ -79,3 +79,7 @@ class Login(View):
        else:
            messages.error(request,'authentication failure')
            return redirect('login')
+       
+def logout_user(request):
+    logout(request)
+    return redirect('/')
